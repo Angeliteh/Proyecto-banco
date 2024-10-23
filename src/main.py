@@ -7,10 +7,11 @@ def mostrar_menu():
     print("2. Agregar cuenta")
     print("3. Realizar depósito")
     print("4. Realizar retiro")
-    print("5. Mostrar tablas")
-    print("6. Eliminar cuenta")
-    print("7. Eliminar cliente")
-    print("8. Salir")
+    print("5. Realizar transferencia") 
+    print("6. Mostrar tablas")
+    print("7. Eliminar cuenta")
+    print("8. Eliminar cliente")
+    print("9. Salir")
     print("-----------------------")
 
 def main():
@@ -71,11 +72,30 @@ def main():
             else:
                 print("Cuenta no encontrada.")
 
-        elif opcion == "5":
+        elif opcion == "5":  # Opción de transferencia
+            id_cuenta_origen = int(input("ID de la cuenta de origen: "))
+            id_cuenta_destino = int(input("ID de la cuenta de destino: "))
+            monto = float(input("Monto a transferir: "))
+
+            cuenta_origen = banco.obtener_cuenta_por_id(id_cuenta_origen)  # Obtener la cuenta de origen
+            cuenta_destino = banco.obtener_cuenta_por_id(id_cuenta_destino)  # Obtener la cuenta de destino
+
+            if cuenta_origen and cuenta_destino:
+                try:
+                    # Realizar la transacción de tipo "Transferencia"
+                    transaccion = banco.realizar_transaccion(cuenta_origen, cuenta_destino, "Transferencia", monto)
+                    print(f"Transferencia realizada exitosamente. ID de la transacción: {transaccion.id_transaccion}")
+                except ValueError as e:
+                    print(f"Error: {e}")
+            else:
+                print("Una de las cuentas no fue encontrada.")
+
+
+        elif opcion == "6":
             print("Contenido de las tablas:")
             db_manager.mostrar_todas_las_tablas()  # Método para mostrar todas las tablas en la base de datos
 
-        elif opcion == "6":  # Opción para eliminar cuenta
+        elif opcion == "7":  # Opción para eliminar cuenta
             id_cuenta = int(input("ID de la cuenta a eliminar: "))
             
             # Obtener la cuenta por su ID
@@ -92,7 +112,7 @@ def main():
             else:
                 print("Cuenta no encontrada.")
 
-        elif opcion == "7":  # Opción para eliminar cliente
+        elif opcion == "8":  # Opción para eliminar cliente
             id_cliente = int(input("ID del cliente a eliminar: "))
             cliente = banco.obtener_cliente_por_id(id_cliente)  # obtiene el objetco cliente con sus cuentas vinculadas solo con el id
             if cliente:
