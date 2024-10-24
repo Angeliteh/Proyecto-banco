@@ -7,4 +7,5 @@ class Transaccion:
         self.monto = monto
         self.fecha = fecha
 
-    
+    def __str__(self):
+        return f"Transacción ID: {self.id_transaccion}, Tipo: {self.tipo_transaccion}, Monto: {self.monto}, Fecha: {self.fecha}"

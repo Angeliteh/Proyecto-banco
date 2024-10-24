@@ -19,15 +19,15 @@ class Banco:
             cliente = Cliente(*cliente_data)  # Desempaquetamos los resultados en el constructor de Cliente
 
             # Aquí llamamos al método que obtiene las cuentas desde la base de datos y las vinculamos al cliente
-            self.obtener_cliente_con_cuentas_DB(cliente)
+            cliente_actualizado = self.obtener_cliente_con_cuentas_DB(cliente)
 
-            cuentas = cliente.obtener_cuentas()
-            print(f"B_Obteniendo cuentas para el cliente id: {cliente.id_cliente}")  # Depuración
+            cuentas = cliente_actualizado.obtener_cuentas()
+            print(f"B_Obteniendo cuentas para el cliente id: {cliente_actualizado.id_cliente}")  # Depuración
             if cuentas:
                 print(f"B_El cliente tiene {len(cuentas)} cuentas: {[str(cuenta) for cuenta in cuentas]}")
             else:
                 print("B_El cliente no tiene cuentas registradas.")  # Comprobar si no hay cuentas
-            return cliente
+            return cliente_actualizado
         return None  # Si no se encuentra, retornamos None
         
     def obtener_cuenta_por_id(self, id_cuenta):
@@ -45,18 +45,26 @@ class Banco:
             cliente = self.obtener_cliente_por_id(id_cliente)
             
             # Crear y retornar el objeto Cuenta
-            return Cuenta(id_cuenta, cliente, tipo_cuenta, saldo, nip)
+            cuenta = Cuenta(id_cuenta, cliente, tipo_cuenta, saldo, nip)
+            return cuenta
         return None  # Si no se encuentra, retornamos None
     
     def realizar_transaccion(self, cuenta_origen, cuenta_destino, tipo_transaccion, monto):
         # Realiza el depósito o retiro según el tipo de transacción
         if tipo_transaccion == "Depósito":
             cuenta_origen.realizar_deposito(monto)
+            # Actualiza el saldo en la base de datos
+            self.db_manager.actualizar_saldo(cuenta_origen.id_cuenta, cuenta_origen.saldo)
         elif tipo_transaccion == "Retiro":
             cuenta_origen.realizar_retiro(monto)
+            # Actualiza el saldo en la base de datos
+            self.db_manager.actualizar_saldo(cuenta_origen.id_cuenta, cuenta_origen.saldo)
         elif tipo_transaccion == "Transferencia":
             cuenta_origen.realizar_retiro(monto)
             cuenta_destino.realizar_deposito(monto)
+            # Actualiza el saldo en la base de datos para ambas cuentas
+            self.db_manager.actualizar_saldo(cuenta_origen.id_cuenta, cuenta_origen.saldo)
+            self.db_manager.actualizar_saldo(cuenta_destino.id_cuenta, cuenta_destino.saldo)
 
         # Crear una instancia de Transaccion sin ID inicial se geenra autoimatico
         transaccion = Transaccion(
@@ -176,7 +184,7 @@ class Banco:
             cuentas_cliente = self.db_manager.obtener_cuentas_por_cliente(cliente.id_cliente)
             
             # Asocia cada cuenta obtenida al cliente
-            for cuenta_data in cuentas_cliente:
+            for cuenta_data in cuentas_cliente[:]:
                 cuenta = Cuenta(*cuenta_data)  # Desempaqueta los datos en un objeto Cuenta
                 cliente.agregar_cuenta(cuenta)  # Agrega la cuenta al cliente
 
@@ -188,6 +196,6 @@ class Banco:
         transacciones_data = self.db_manager.obtener_transacciones_por_cuenta(cuenta.id_cuenta)
         
         # Puedes procesar `transacciones_data` para convertirlas en objetos Transaccion
-        transacciones = [Transaccion(*data) for data in transacciones_data]
+        #transacciones = [Transaccion(*data) for data in transacciones_data]
         
-        return transacciones
+        return transacciones_data

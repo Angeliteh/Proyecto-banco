@@ -166,10 +166,12 @@ class DatabaseManager:
 
     def obtener_cliente_por_id(self, id_cliente):
         """Obtiene un cliente a partir de su ID."""
-        query = "SELECT id_cliente, nombre, apellido, email, contrasena FROM clientes WHERE id_cliente = ?"
+        query = "SELECT * FROM clientes WHERE id_cliente = ?"        
         result = self.execute_query(query, (id_cliente,), fetch=True)  # fetch=True para obtener un resultado
-        return result[0] if result else None  
-
+        if result:
+            return result[0]  # Retorna la fila de la cuenta encontrada
+        return None  # Si no se encuentra, retorna None
+    
     def obtener_cuenta_por_id(self, id_cuenta):
 
         """Obtiene una cuenta a partir de su ID."""
@@ -211,3 +213,12 @@ class DatabaseManager:
     def obtener_clientes(self):
         query = "SELECT * FROM clientes"
         return self.execute_query(query, fetch=True)
+    
+    def actualizar_saldo(self, id_cuenta, nuevo_saldo):
+            # Actualiza el saldo de la cuenta en la base de datos
+            query = "UPDATE cuentas SET saldo = ? WHERE id_cuenta = ?"
+            params = (nuevo_saldo, id_cuenta)
+            self.execute_query(query, params)
+            print(f"Saldo actualizado desde la base de datos para la cuenta {id_cuenta}: {nuevo_saldo}")
+
+

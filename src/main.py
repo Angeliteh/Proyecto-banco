@@ -11,7 +11,9 @@ def mostrar_menu():
     print("6. Mostrar tablas")
     print("7. Eliminar cuenta")
     print("8. Eliminar cliente")
-    print("9. Salir")
+    print("9. Ver historial de transacciones por cuenta")
+    print("10. Ver historial de transacciones por cliente")
+    print("11. Salir")
     print("-----------------------")
 
 def main():
@@ -23,7 +25,7 @@ def main():
         mostrar_menu()
         opcion = input("Selecciona una opción: ")
 
-        if opcion == "1":
+        if opcion == "1": # Opción de registro cliente
             nombre = input("Nombre del cliente: ")
             apellido = input("Apellido del cliente: ")
             email = input("Email del cliente: ")
@@ -31,7 +33,7 @@ def main():
             cliente = banco.registrar_cliente(nombre, apellido, email, contrasena)
             print(f"Cliente registrado exitosamente con ID: {cliente.id_cliente}")  # Mensaje de depuració
 
-        elif opcion == "2":
+        elif opcion == "2": # Opción de crear cuenta
             id_cliente = int(input("ID del cliente: "))
             tipo_cuenta = input("Tipo de cuenta (Ahorros/Corriente): ")
             saldo_inicial = float(input("Saldo inicial: "))
@@ -49,7 +51,7 @@ def main():
             else:
                 print("Cliente no encontrado.")
 
-        elif opcion == "3":
+        elif opcion == "3": # Opción de depostio
             id_cuenta = int(input("ID de la cuenta: "))
             monto = float(input("Monto a depositar: "))
             cuenta = banco.obtener_cuenta_por_id(id_cuenta)  # Método que debes implementar en Banco
@@ -59,7 +61,7 @@ def main():
             else:
                 print("Cuenta no encontrada.")
 
-        elif opcion == "4":
+        elif opcion == "4": # Opción de retiro
             id_cuenta = int(input("ID de la cuenta: "))
             monto = float(input("Monto a retirar: "))
             cuenta = banco.obtener_cuenta_por_id(id_cuenta)  # Método que debes implementar en Banco
@@ -72,7 +74,7 @@ def main():
             else:
                 print("Cuenta no encontrada.")
 
-        elif opcion == "5":  # Opción de transferencia
+        elif opcion == "5":  # Opción de trasnferencia
             id_cuenta_origen = int(input("ID de la cuenta de origen: "))
             id_cuenta_destino = int(input("ID de la cuenta de destino: "))
             monto = float(input("Monto a transferir: "))
@@ -90,8 +92,7 @@ def main():
             else:
                 print("Una de las cuentas no fue encontrada.")
 
-
-        elif opcion == "6":
+        elif opcion == "6": # Opción de mostrar tablas
             print("Contenido de las tablas:")
             db_manager.mostrar_todas_las_tablas()  # Método para mostrar todas las tablas en la base de datos
 
@@ -138,8 +139,42 @@ def main():
             else:
                 print("Cliente no encontrado.")
 
+        elif opcion == "9":  # Ver historial de transacciones por cuenta
+            id_cuenta = int(input("ID de la cuenta: "))
+            cuenta = banco.obtener_cuenta_por_id(id_cuenta)
+            if cuenta:
+                transacciones = banco.obtener_historial_transacciones_por_cuenta(cuenta)
+                if transacciones:
+                    print(f"Historial de transacciones para la cuenta {id_cuenta}:")
+                    db_manager.mostrar_tabla("Transacciones", transacciones)  # Muestra las transacciones en formato tabular
+                    #for transaccion in transacciones:
+                        #print(transaccion)  # Aquí puedes mostrar el detalle de cada transacción
+                
+                else:
+                    print("No se encontraron transacciones para esta cuenta.")
+            else:
+                print("Cuenta no encontrada.")
+        
+        elif opcion == "10":  # Ver historial de transacciones por cliente
+            id_cliente = int(input("ID del cliente: "))
+            cliente = banco.obtener_cliente_por_id(id_cliente)
+            if cliente:
+                print(f"Historial de transacciones para el cliente {cliente.id_cliente}:")
+                cuentas_cliente = cliente.obtener_cuentas()
+            
+                if cuentas_cliente:
+                    print(f"Cuentas actuales del cliente: {[cuenta.id_cuenta for cuenta in cuentas_cliente]}")
+                    for cuenta in cuentas_cliente:
+                        transacciones = banco.obtener_historial_transacciones_por_cuenta(cuenta)
+                        if transacciones:
+                            print(f"Historial de transacciones para la cuenta {cuenta.id_cuenta}:")
+                            db_manager.mostrar_tabla("Transacciones", transacciones)  # Muestra las transacciones en formato tabular              
+                else:
+                        print("No se encontraron transacciones para esta cuenta.")
+            else:
+                print("Cuenta no encontrada.")
 
-        elif opcion == "8":
+        elif opcion == "11":
             print("Saliendo del menú.")
             break
 

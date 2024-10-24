@@ -13,13 +13,15 @@ class Cuenta:
         return f"Cuenta {self.id_cuenta}: {self.tipo_cuenta}, Saldo: {self.saldo}"
     
     def realizar_deposito(self, monto):
-        print(f"Saldo = {self.saldo} de cuenta {self.id_cuenta}")
+        print(f"Saldo desde objeto cliente = {self.saldo} de cuenta {self.id_cuenta}")
         self.saldo += monto
-        print(f"nuevo actualizado = {self.saldo} de cuenta {self.id_cuenta}")
+        print(f"nuevo actualizado desde objeto cliente = {self.saldo} de cuenta {self.id_cuenta}")
 
     def realizar_retiro(self, monto):
         if monto <= self.saldo:
+            print(f"Saldo desde objeto cliente = {self.saldo} de cuenta {self.id_cuenta}")
             self.saldo -= monto
+            print(f"nuevo actualizado desde objeto cliente = {self.saldo} de cuenta {self.id_cuenta}")
         else:
             raise ValueError("Saldo insuficiente.")
 
