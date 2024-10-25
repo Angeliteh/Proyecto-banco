@@ -9,7 +9,7 @@ class Cliente:
         
     def __str__(self):
         """Devuelve una representación en cadena del cliente."""
-        return f"{self.nombre} {self.apellido} ({self.email})"
+        return f"{self.id_cliente}{self.nombre} {self.apellido} {self.email} {self.contrasena}"
     
     def agregar_cuenta(self, cuenta):
         self.cuentas.append(cuenta)

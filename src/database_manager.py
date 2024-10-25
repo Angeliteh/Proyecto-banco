@@ -160,10 +160,6 @@ class DatabaseManager:
         query = "DELETE FROM transacciones WHERE id_cuenta_origen ? OR id_cuenta_destino = ?"
         self.execute_query(query, (id_cliente, id_cliente))
 
-    def obtener_transacciones(self):
-        query = "SELECT * FROM transacciones"
-        return self.execute_query(query, fetch=True)
-
     def obtener_cliente_por_id(self, id_cliente):
         """Obtiene un cliente a partir de su ID."""
         query = "SELECT * FROM clientes WHERE id_cliente = ?"        
@@ -214,11 +210,27 @@ class DatabaseManager:
         query = "SELECT * FROM clientes"
         return self.execute_query(query, fetch=True)
     
+    def obtener_transacciones(self):
+        query = "SELECT * FROM transacciones"
+        return self.execute_query(query, fetch=True)
+
     def actualizar_saldo(self, id_cuenta, nuevo_saldo):
             # Actualiza el saldo de la cuenta en la base de datos
             query = "UPDATE cuentas SET saldo = ? WHERE id_cuenta = ?"
             params = (nuevo_saldo, id_cuenta)
             self.execute_query(query, params)
             print(f"Saldo actualizado desde la base de datos para la cuenta {id_cuenta}: {nuevo_saldo}")
+
+    def actualizar_cliente(self, id_cliente, nombre, apellido, email, contrasena):
+        """Actualiza la información de un cliente en la base de datos."""
+        query = """
+            UPDATE Clientes
+            SET nombre = ?, apellido = ?, email = ?, contrasena = ?
+            WHERE id_cliente = ?
+        """
+        # Ejecutar la consulta con los valores pasados, sin depender del objeto Cliente
+        self.execute_query(query, (nombre, apellido, email, contrasena, id_cliente))
+        print(f"DB_Cliente con ID {id_cliente} actualizado en la base de datos.")
+
 
 

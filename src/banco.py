@@ -139,6 +139,56 @@ class Banco:
     def buscar_transaccion(self, id_transaccion):
         return self.db_manager.obtener_transaccion_por_id(id_transaccion)
 
+    def modificar_cliente(self, cliente, nombre=None, apellido=None, email=None, contrasena=None):
+        """Modifica la información de un cliente."""
+        if cliente:
+            print(f"B_Modificando cliente con ID {cliente.id_cliente}")
+
+            # Almacenar cambios en un diccionario
+            cambios = {}
+
+            # Verificar y almacenar cambios en el diccionario solo para verificación
+            if nombre is not None and nombre != cliente.nombre:
+                cambios['Nombre'] = (cliente.nombre, nombre)
+            if apellido is not None and apellido != cliente.apellido:
+                cambios['Apellido'] = (cliente.apellido, apellido)
+            if email is not None and email != cliente.email:
+                cambios['email'] = (cliente.email, email)
+            if contrasena is not None and contrasena != cliente.contrasena:
+                cambios['Contraseña'] = (cliente.contrasena, contrasena)
+
+            # Actualizar solo si hay cambios
+            if cambios:
+                # Llamar a DatabaseManager pasando los datos, no el objeto cliente
+                self.db_manager.actualizar_cliente(cliente.id_cliente, 
+                    nombre or cliente.nombre,
+                    apellido or cliente.apellido,
+                    email or cliente.email,
+                    contrasena or cliente.contrasena
+                )
+
+                # **Actualizar el objeto cliente en memoria/objeto también**
+                if 'Nombre' in cambios:
+                    cliente.nombre = cambios['Nombre'][1]
+                if 'Apellido' in cambios:
+                    cliente.apellido = cambios['Apellido'][1]
+                if 'email' in cambios:
+                    cliente.email = cambios['email'][1]
+                if 'Contraseña' in cambios:
+                    cliente.contrasena = cambios['Contraseña'][1]
+
+                # Mostrar solo los campos que se han modificado
+                for campo, (anterior, nuevo) in cambios.items():
+                    print(f"{campo} cambiado de '{anterior}' a '{nuevo}'.")
+            else:
+                print("No se han realizado cambios.")
+        else:
+            print("B_Cliente no válido.")
+
+
+
+
+
     def eliminar_cliente(self, cliente):
         """Elimina un cliente junto con todas sus cuentas y transacciones."""
         if cliente:

@@ -13,7 +13,8 @@ def mostrar_menu():
     print("8. Eliminar cliente")
     print("9. Ver historial de transacciones por cuenta")
     print("10. Ver historial de transacciones por cliente")
-    print("11. Salir")
+    print("11. Modificar cliente")
+    print("12. Salir")
     print("-----------------------")
 
 def main():
@@ -173,8 +174,60 @@ def main():
                         print("No se encontraron transacciones para esta cuenta.")
             else:
                 print("Cuenta no encontrada.")
+        
+        elif opcion == "11":  # Modificar cliente
+            id_cliente = int(input("ID del cliente a modificar: "))
+            cliente = banco.obtener_cliente_por_id(id_cliente)
+            
+            if cliente:
+                print(f"Cliente encontrado: {cliente}")
 
-        elif opcion == "11":
+                # Preguntar qué campo desea modificar
+                print("¿Qué campo deseas modificar?")
+                print("1. Nombre")
+                print("2. Apellido")
+                print("3. email")
+                print("4. Contraseña")
+                print("5. Todos los campos")
+                campo_opcion = input("Selecciona una opción (1-5): ")
+
+                # Inicializar variables para los nuevos datos
+                nuevo_nombre = cliente.nombre
+                nuevo_apellido = cliente.apellido
+                nuevo_correo = cliente.email
+                nueva_contrasena = cliente.contrasena
+                
+                if campo_opcion == "1":
+                    nuevo_nombre = input(f"Nombre actual: {cliente.nombre}. Nuevo nombre: ")
+                elif campo_opcion == "2":
+                    nuevo_apellido = input(f"Apellido actual: {cliente.apellido}. Nuevo apellido: ")
+                elif campo_opcion == "3":
+                    nuevo_correo = input(f"email actual: {cliente.email}. Nuevo email: ")
+                elif campo_opcion == "4":
+                    nueva_contrasena = input(f"Contraseña actual: {cliente.contrasena}. Nueva contraseña: ")
+                elif campo_opcion == "5":
+                    nuevo_nombre = input(f"Nombre actual: {cliente.nombre}. Nuevo nombre: ")
+                    nuevo_apellido = input(f"Apellido actual: {cliente.apellido}. Nuevo apellido: ")
+                    nuevo_correo = input(f"email actual: {cliente.email}. Nuevo email: ")
+                    nueva_contrasena = input(f"Contraseña actual: {cliente.contrasena}. Nueva contraseña: ")
+                else:
+                    print("Opción no válida. No se realizarán cambios.")
+                    return
+
+                # Llamar al método de modificar cliente, pasando los nuevos datos
+                banco.modificar_cliente(
+                    cliente,
+                    nombre=nuevo_nombre if nuevo_nombre else None,
+                    apellido=nuevo_apellido if nuevo_apellido else None,
+                    email=nuevo_correo if nuevo_correo else None,
+                    contrasena=nueva_contrasena if nueva_contrasena else None
+                )
+                print("Cliente modificado exitosamente.")
+            else:
+                print("Cliente no encontrado.")
+
+
+        elif opcion == "12":
             print("Saliendo del menú.")
             break
 
