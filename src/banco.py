@@ -50,6 +50,9 @@ class Banco:
         return None  # Si no se encuentra, retornamos None
     
     def realizar_transaccion(self, cuenta_origen, cuenta_destino, tipo_transaccion, monto):
+        # Verificar que la cuenta de origen y destino no sean la misma
+        if cuenta_origen.id_cuenta == cuenta_destino.id_cuenta:
+            raise ValueError("La cuenta de origen y destino no pueden ser la misma.")
         # Realiza el depósito o retiro según el tipo de transacción
         if tipo_transaccion == "Depósito":
             cuenta_origen.realizar_deposito(monto)
