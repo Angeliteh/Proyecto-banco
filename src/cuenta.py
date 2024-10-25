@@ -1,5 +1,4 @@
 
-
 class Cuenta:
     def __init__(self, id_cuenta, cliente, tipo_cuenta, saldo, nip):
         self.id_cuenta = id_cuenta
@@ -25,4 +24,26 @@ class Cuenta:
         else:
             raise ValueError("Saldo insuficiente.")
 
+    # Getter para saldo
+    @property
+    def saldo(self):
+        return self._saldo
     
+    # Setter para saldo con validación
+    @saldo.setter
+    def saldo(self, nuevo_saldo):
+        if nuevo_saldo < 0:
+            raise ValueError("El saldo no puede ser negativo.")
+        self._saldo = nuevo_saldo
+
+    # Getter para nip
+    @property
+    def nip(self):
+        return self._nip
+
+    # Setter para nip con validación
+    @nip.setter
+    def nip(self, nuevo_nip):
+        if len(str(nuevo_nip)) != 4 or not str(nuevo_nip).isdigit():
+            raise ValueError("El NIP debe ser un número de 4 dígitos.")
+        self._nip = nuevo_nip

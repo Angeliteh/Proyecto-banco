@@ -185,10 +185,6 @@ class Banco:
         else:
             print("B_Cliente no válido.")
 
-
-
-
-
     def eliminar_cliente(self, cliente):
         """Elimina un cliente junto con todas sus cuentas y transacciones."""
         if cliente:

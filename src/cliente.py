@@ -4,12 +4,12 @@ class Cliente:
         self.nombre = nombre
         self.apellido = apellido
         self.email = email
-        self.contrasena = contrasena
+        self._contrasena = contrasena
         self.cuentas = []
-        
+            
     def __str__(self):
         """Devuelve una representación en cadena del cliente."""
-        return f"{self.id_cliente}{self.nombre} {self.apellido} {self.email} {self.contrasena}"
+        return f"{self.nombre} {self.apellido} {self.email} "
     
     def agregar_cuenta(self, cuenta):
         self.cuentas.append(cuenta)
@@ -28,5 +28,27 @@ class Cliente:
     def obtener_cuentas(self):
         print(f"Cl_Obteniendo cuentas del cliente con ID {self.id_cliente}")  # Depuración
         return self.cuentas  # Solo devuelve la lista de cuentas
-
     
+    # Getter para email
+    @property
+    def email(self):
+        return self._email
+
+    # Setter para email con validación
+    @email.setter
+    def email(self, nuevo_email):
+        if "@" not in nuevo_email or "." not in nuevo_email:
+            raise ValueError("El formato del email es inválido.")
+        self._email = nuevo_email
+    
+    # Getter para contrasena
+    @property
+    def contrasena(self):
+        return self._contrasena
+    
+    # Setter para contrasena con validación
+    @contrasena.setter
+    def contrasena(self, nueva_contrasena):
+        if len(nueva_contrasena) < 6:
+            raise ValueError("La contraseña debe tener al menos 6 caracteres.")
+        self._contrasena = nueva_contrasena
